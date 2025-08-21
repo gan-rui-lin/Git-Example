@@ -292,7 +292,7 @@ git cherry-pick -x <commit>       // 挑选并在提交信息中记录原始提�
 git cherry-pick --no-commit <commit>  // 挑选但不自动提交
 ```
 
-=== 高级重置操作
+=== `git reset` 重置操作
 
 ```
 git reset --soft HEAD~1       // 软重置：保留更改在暂存区
@@ -458,4 +458,19 @@ b3efa5c (HEAD -> main) Merge branch 'feat/b'
 
 ```typ
  $1+2 = 3 // '$' 未闭合
+```
+
+执行 `git revert HEAD`：
+
+```
+➜  Git-Example git:(main) git revert HEAD
+[main 4cd8927] Revert "bad commit"
+ 1 file changed, 2 deletions(-)
+```
+
+执行 `git log --oneline -1`:
+
+```
+➜  Git-Example git:(main) git log --oneline -1
+4cd8927 (HEAD -> main) Revert "bad commit"
 ```
