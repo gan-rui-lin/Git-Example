@@ -230,3 +230,63 @@ Changes to be committed:
 ]
 
 在 feat/a 分支上提交所有改动并推送到对应远端。
+
+切换到 feat/b 分支上，做一些改动并提交；
+
+再做一些改动提交，并 _推送到对应远程_：
+
+执行 `git log` 显示：
+
+```
+Git-Example git:(feat/b) ✗ git log
+commit 373509d05c77e0b2c89842a6d508a66368ed2121 (HEAD -> feat/b, origin/feat/b)
+Author:
+Date:   Thu Aug 21 11:39:23 2025 +0800
+
+    feat/b change-2
+
+commit 901da01ea6b7db1a3bb33b03631498674b0a755a
+Author:
+Date:   Thu Aug 21 11:38:20 2025 +0800
+
+    feat/b change-1
+
+commit 97d657766afded606d6102afad68fe5e949ececa (origin/main, main)
+```
+
+此时如果我们想要合并这两次远程的提交历史,执行 `git rebase -i HEAD~2` 来处理最近的两次提交历史：
+
+把
+
+```
+pick 901da01 feat/b change-1
+pick 373509d feat/b change-2
+```
+
+改为
+
+```
+pick 901da01 feat/b change-1
+squash 373509d feat/b change-2
+```
+
+表示把第二个改动合并到前一个改动上，最后编辑新的 commit 信息。完成后执行 `git log` :
+
+```
+commit 0ff2e03ef271e258b29b4b2a44c6c80694dbf7b1 (HEAD -> feat/b)
+Author:
+Date:   Thu Aug 21 11:38:20 2025 +0800
+
+    feat: combined b changes
+
+    * Includes change-1 and change-2
+    * Unified feature implementation# This is a combination of 2 commits.
+
+commit 97d657766afded606d6102afad68fe5e949ececa (origin/main, main)
+```
+
+此时，就完成了本地分支的 commit 的清理工作。
+
+#note-box[
+需要使用 `git push -f origin feat/b` 命令来强制推送，因为 `git rebase` 会重写 commit，导致和远端的历史出现不一致的情况。
+]
