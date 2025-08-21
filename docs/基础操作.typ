@@ -169,5 +169,40 @@ To https://github.com/gan-rui-lin/Git-Example.git
 
 可以看到远程的 new_branch 分支被删除了。
 
-切换回 main 分支并做一些改动并提交(未 push 到远程)
+切换回 main 分支并做一些改动并提交(尚未推送到远程), 执行 `git log`:
 
+```
+ Git-Example git:(main) ✗ git log
+commit 3e6cca8050f6409f5b9bad5d4b9849bcebffdf49 (HEAD -> main)
+Author:
+Date:   Thu Aug 21 10:21:11 2025 +0800
+
+    git push/pull example
+
+commit fb7803e0d23e9c3fa6e78eaadc96b159a3f1e293 (origin/main, new_branch)
+Author:
+Date:   Thu Aug 21 10:00:42 2025 +0800
+
+    init: typ style
+
+commit 2964a06ec2a6428fa9348b317534047a553ebdbd
+Author:
+Date:   Wed Aug 20 18:00:43 2025 +0800
+
+    add license
+```
+
+可以看到当前的 `HEAD`、 本地 `main` 分支和 `new_branch` 分支、`origin` 远程的 `main` 分支所指向的 commit-hash 值。
+
+执行 `git checkout fb7803e0d23e9c`, 这个 hash 值是第二次提交的 hash 值:
+
+此时再执行 `git reflog | tail -n 2` 命令:
+
+```
+fb7803e (HEAD, origin/main, new_branch) HEAD@{0}: checkout: moving from main to fb7803e0d23e9c
+3e6cca8 (main) HEAD@{1}: commit: git push/pull example
+```
+
+可以发现 HEAD 指向了 `fb7803e` 的这个游离分支上。并且 `HEAD@{n}` 的 `n` 告诉了这是 HEAD 指针的第 n 次移动。
+
+最后执行 `git checkout main` 切换回本地`main` 分支并提交更改。
