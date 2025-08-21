@@ -33,3 +33,141 @@
   #set text(font: font.cjk-bold)
   #it
 ]
+
+= 基础操作
+
+== 操作概览
+
+#figure(three-line-table[
+| 操作 | 命令示例 | 说明 |
+| --- | --- | --- |
+| 初始化仓库 | `git init` | 初始化本地仓库 |
+| 克隆仓库 | `git clone <仓库地址>` | 克隆远程仓库到本地 |
+| 查看状态 | `git status` | 查看当前仓库状态 |
+| 添加到暂存区 | `git add <文件名>` | 添加文件到暂存区 |
+| 提交更改 | `git commit -m "提交说明"` | 提交暂存区内容 |
+| 查看历史 | `git log` | 查看提交历史 |
+| 查看 ref 历史 | `git reflog` | 查看 HEAD 的所有移动痕迹 |
+| 推送到远程 | `git push` | 推送本地提交到远程仓库 |
+| 拉取更新 | `git pull` | 拉取并合并远程更新 |
+| 创建分支 | `git branch <分支名>` | 创建新分支 |
+| 切换分支 | `git checkout <分支名>` | 切换到指定分支 |
+| 查看帮助 | `git --help` 或 `git help <command>` | 显示对应命令的帮助 |
+| 查看远程 | `git remote` | 查看远程信息 |
+], caption: "Git 常用命令一览") <git-commands>
+
+== 更多说明
+
+=== `git log` 和 `git reflog`
+
+- _`git log`：_ 查看 _项目提交历史_ 。它显示的是代码库的 _演进历史_，是你有意识创建的提交记录（commit history）。
+
+- _`git reflog`：_ 查看 _引用日志_。它记录的是 _本地仓库中 HEAD 指针和分支指针的移动历史_，是你（或 Git 命令）在本地仓库中 _执行操作的踪迹_。
+
+=== `git push` 命令格式
+
+推送命令的几种格式：
+```
+  git push <远程主机名> <本地分支名>:<远程分支名>  // 标准格式
+  git push <远程主机名> <本地分支名>               // 推送到同名分支
+  git push <远程主机名> :<远程分支名>              // 删除远程分支（不推荐）
+  git push origin --delete <远程分支名>            // 删除远程分支（推荐）
+  ```
+
+#note-box[
+- 第一行是标准写法，明确指定本地和远程分支
+- 第二行是简化写法，推送到_同名远程分支_（_不存在则创建_）
+- 最后两行用于删除远程分支，推荐使用 `--delete` 的写法
+]
+
+=== `git pull` 命令格式
+
+```
+git pull <远程主机名> <远程分支名>:<本地分支名>   // 标准格式
+git pull <远程主机名> <远程分支名>                // 远程分支是与当前分支合并
+```
+
+实际上是 `git fecth` 和 `git merge` 的简写。
+
+#note-box[
+如果不想使用 `git merge` 来合并，而是使用 `git rebase`，可以使用 `git pull --rebase` 操作。
+]
+
+=== `git checkout` 命令格式
+
+```
+git checkout [-b] <本地分支名>    // 切换到某一个本地分支[-b:不存在则创建]
+git checkout <commit-hash>        // 将 HEAD 指向对应的 commit 而非一个分支的尖端
+```
+
+#note-box[
+`git checkout <commit-hash>` 往往用于基于特定点来新建一个分支。流程如下:
+
+-- `git checkout <tag-name>` (这会进入分离头指针状态，因为标签通常不是分支)。
+
+--
+`git switch -c <new-branch-name>`(基于当前的分离头指针状态创建新分支并切换到它)。
+]
+
+== 演示1
+
+执行 `git push origin main:main`:
+```
+➜  Git-Example git:(main) : git push origin main:main
+
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (4/4), 769 bytes | 769.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/gan-rui-lin/Git-Example.git
+   2964a06..fb7803e  main -> main
+```
+
+执行 `git branch`:
+```
+➜  Git-Example git:(main) ✗ git branch
+* main
+```
+
+执行 `git checkout -b new_branch`:
+
+```
+➜  Git-Example git:(main) git checkout -b new_branch
+Switched to a new branch 'new_branch'
+➜  Git-Example git:(new_branch)
+```
+
+来到 new_branch 之后，继续执行 `git push origin new_branch`,将当前分支推到远程的同名分支上去：
+
+```
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'new_branch' on GitHub by visiting:
+remote:      https://github.com/gan-rui-lin/Git-Example/pull/new/new_branch
+remote:
+To https://github.com/gan-rui-lin/Git-Example.git
+ * [new branch]      new_branch -> new_branch
+```
+
+最后执行 `git push origin --delete new_branch` 删除这一个新分支:
+
+```
+➜  Git-Example git:(new_branch) ✗ git push origin --delete new_branch
+To https://github.com/gan-rui-lin/Git-Example.git
+ - [deleted]         new_branch
+```
+
+执行 `git branch -a`:
+
+```
+  main
+* new_branch
+  remotes/origin/main
+```
+
+可以看到远程的 new_branch 分支被删除了。
+
+切换回 main 分支并做一些改动并提交(未 push 到远程)
+
