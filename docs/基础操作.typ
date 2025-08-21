@@ -206,3 +206,7 @@ fb7803e (HEAD, origin/main, new_branch) HEAD@{0}: checkout: moving from main to 
 可以发现 HEAD 指向了 `fb7803e` 的这个游离分支上。并且 `HEAD@{n}` 的 `n` 告诉了这是 HEAD 指针的第 n 次移动。
 
 最后执行 `git checkout main` 切换回本地`main` 分支并提交更改。
+
+切换到 feat/b 分支上，做一些改动并提交；
+
+再做一些改动提交，并推送到对应远程：
