@@ -206,3 +206,27 @@ fb7803e (HEAD, origin/main, new_branch) HEAD@{0}: checkout: moving from main to 
 可以发现 HEAD 指向了 `fb7803e` 的这个游离分支上。并且 `HEAD@{n}` 的 `n` 告诉了这是 HEAD 指针的第 n 次移动。
 
 最后执行 `git checkout main` 切换回本地`main` 分支并提交更改。
+
+在 feat/a 分支上提交 temp.txt 改动:
+
+此时该改动没有提交到远程。
+
+先尝试使用 `git reset --soft HEAD~1` 来回退到上一次提交：
+
+执行 `git status` 发现两次提交的差异被放到了暂存区：
+
+```
+➜  Git-Example git:(feat/a)  git status
+On branch feat/a
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   temp.txt
+```
+
+再次提交 temp.txt 并使用 `git reset --hard HEAD~1`，此时所有本地改动全部删除。
+
+#warning-box[
+`git reset --hard` 命令会将所有有区别的本地改动都删除（包括提交了的改动和没提交的改动）。误操作的情况下，可以尝试使用 `git reflog` 查找 `git reset` 之前的版本并恢复提交了的改动部分。
+]
+
+在 feat/a 分支上提交所有改动并推送到对应远端。
