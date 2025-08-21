@@ -13,8 +13,25 @@
   math: "New Computer Modern Math",
 )
 
+// 设置主题色彩
+#let primary-color = rgb("#1f4e79")
+#let accent-color = rgb("#2e8b57")
+#let code-bg = rgb("#FFFFFF")
+
 // 强调文本使用黑体
-#show strong: set text(font: font.cjk-bold)
+#show strong: set text(font: font.cjk-bold, fill: primary-color)
+
+// 美化代码块
+#show raw.where(block: true): it => block(width: 100%, fill: code-bg, radius: 4pt, inset: 1em)[
+  #set text(font: ("Consolas", "Courier New"), size: 10pt, weight: "regular")
+  #it
+]
+
+// 美化行内代码
+#show raw.where(block: false): it => box(fill: code-bg, radius: 0pt, inset: (x: 3pt, y: 1pt))[
+  #set text(font: ("Consolas", "Courier New"), size: 10pt, fill: black, weight: "medium")
+  #it
+]
 
 #show: ori.with(
   title: "Git 基础操作",
@@ -57,13 +74,12 @@
 ], caption: "Git 常用命令一览") <git-commands>
 
 == 详细说明
-== 详细说明
 
 === `git log` 和 `git reflog`
 
-- _`git log`：_ 查看 _项目提交历史_ 。它显示的是代码库的 _演进历史_，是你有意识创建的提交记录（commit history）。
+- `git log`： 查看 _项目提交历史_ 。它显示的是代码库的 _演进历史_，是你有意识创建的提交记录（commit history）。
 
-- _`git reflog`：_ 查看 _引用日志_。它记录的是 _本地仓库中 HEAD 指针和分支指针的移动历史_，是你（或 Git 命令）在本地仓库中 _执行操作的踪迹_。
+- `git reflog`： 查看 _引用日志_。它记录的是 _本地仓库中 HEAD 指针和分支指针的移动历史_，是你（或 Git 命令）在本地仓库中 _执行操作的踪迹_。
 
 === `git push` 命令格式
 
