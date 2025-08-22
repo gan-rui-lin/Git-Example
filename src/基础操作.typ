@@ -321,6 +321,32 @@ git reset --mixed HEAD~1      // 混合重置：保留更改在工作目录
 git reset --hard HEAD~1       // 硬重置：完全删除更改
 ```
 
+=== `git diff` 查看差异
+
+```
+git diff
+git diff branch1 branch2 [--stat] //[详细]显示出branch2 相比 branch1 做的改动
+```
+
+#note-box([
+Git 模型的 _专用术语_ 如下:
+
+- Workspace：工作区
+- Index / Stage：暂存区
+- Repository：仓库区（或本地仓库）
+- Remote：远程仓库
+
+#figure(image("image/bg2015120901.png", width: 90%), caption: "Git 模型")
+
+在使用 `git diff` 命令时，默认是查看工作区(workspace)和暂存区(index)之间的差异。
+], title: "Git 模型")
+
+#tip-box[
+当需要比较当前本地分支和远程对应分支的差异时，一般按照如下流程来操作：
++ `git fetch <远程>` 获取远程分支的最新改动（移动 <远程>/HEAD 指针 ）
++ `git diff <本地分支> <远程>/<远程分支>` （在两个分支之间做比较）
+]
+
 == 演示2
 
 在 `main` 分支添加 `temp.txt`，此时 `temp.txt`是 `untracked` 状态。尝试执行 `git checkout new_branch`，提示:
