@@ -101,10 +101,15 @@
 
 ```
 git pull <远程主机名> <远程分支名>:<本地分支名>   // 标准格式
-git pull <远程主机名> <远程分支名>                // 远程分支是与当前分支合并
+git pull <远程主机名> <远程分支名>                // 远程分支与当前分支合并
 ```
 
 实际上是 `git fecth` 和 `git merge` 的简写。
+#note-box[
+当 _当前分支_ 和对应远程主机的某一个分支建立了 `upstream` 关系(_追踪关系_)，也可以省略远程分支。
+
+如果当前分支只有一个追踪分支，连远程主机名都可以省略。
+]
 
 #note-box[
 如果不想使用 `git merge` 来合并，而是使用 `git rebase`，可以使用 `git pull --rebase` 操作。
@@ -117,7 +122,7 @@ git checkout [-b] <本地分支名>    // 切换到某一个本地分支[-b:不�
 git checkout <commit-hash>        // 将 HEAD 指向对应的 commit 而非一个分支的尖端
 ```
 
-#note-box[
+#tip-box[
 `git checkout <commit-hash>` 往往用于基于特定点来新建一个分支。流程如下:
 
 -- `git checkout <tag-name>` (这会进入分离头指针状态，因为标签通常不是分支)。
@@ -262,7 +267,7 @@ git stash drop stash@{0}     // 删除指定暂存
 git stash clear              // 清空所有暂存
 ```
 
-#important-box[
+#tip-box[
 `git stash` 只会暂存已跟踪的文件。如果你有新文件需要暂存，使用 `git stash -u` 包含未跟踪的文件。
 ]
 
@@ -278,8 +283,8 @@ git rebase --abort            // 中止变基操作
 git rebase --onto A B C       // 将C分支从B开始的提交变基到A
 ```
 
-#warning-box[
-`git rebase` 的黄金法则是*永远不要在公共分支上使用它*。
+#important-box[
+`git rebase` 的黄金法则是 *永远不要在公共分支上使用它*。
 ]
 
 === `git revert` 撤销操作
@@ -315,10 +320,6 @@ git reset --soft HEAD~1       // 软重置：保留更改在暂存区
 git reset --mixed HEAD~1      // 混合重置：保留更改在工作目录
 git reset --hard HEAD~1       // 硬重置：完全删除更改
 ```
-
-#caution-box[
-`git reset --hard` 会永久删除未提交的更改，使用前请确保重要数据已备份。
-]
 
 == 演示2
 
@@ -369,15 +370,15 @@ Untracked files:
 
 此时执行 `git stash list` 显示空。
 
-创建 feat/a 分支和 feat/b 分支：
+接下来按如下步骤练习 `git reset` 操作。
 
-在 feat/a 分支上提交 temp.txt 改动:
++ 创建 feat/a 分支和 feat/b 分支：
 
-此时该改动没有提交到远程。
++ 在 feat/a 分支上提交 temp.txt 改动（没有提交到远程）:
 
-先尝试使用 `git reset --soft HEAD~1` 来回退到上一次提交：
++ 先尝试使用 `git reset --soft HEAD~1` 来回退到上一次提交：
 
-执行 `git status` 发现两次提交的差异被放到了暂存区：
++ 执行 `git status` 发现两次提交的差异被放到了暂存区：
 
 ```
 ➜  Git-Example git:(feat/a)  git status
@@ -389,11 +390,13 @@ Changes to be committed:
 
 再次提交 temp.txt 并使用 `git reset --hard HEAD~1`，此时所有本地改动全部删除。
 
-#warning-box[
+#caution-box[
 `git reset --hard` 命令会将所有有区别的本地改动都删除（包括提交了的改动和没提交的改动）。误操作的情况下，可以尝试使用 `git reflog` 查找 `git reset` 之前的版本并恢复提交了的改动部分。
 ]
 
 在 feat/a 分支上提交所有改动并推送到对应远端。
+
+接下来在 feat/b 分支上按如下操作学习 `git rebase -i`：
 
 切换到 feat/b 分支上，做一些改动并提交；
 
