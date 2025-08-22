@@ -321,6 +321,34 @@ git reset --mixed HEAD~1      // 混合重置：保留更改在工作目录
 git reset --hard HEAD~1       // 硬重置：完全删除更改
 ```
 
+=== `git diff` 查看差异
+
+```
+git diff [<path>]
+git diff branch1 branch2 [--stat] //[详细]显示出branch2 相比 branch1 做的改动
+git diff [<commit-id>] [<path>...]  // 显示工作区和指定的id 在某一个文件的改动
+git diff --cached [<commit-id>] [<path>...] // 比较暂存区和指定的 commit 改动
+```
+
+#note-box([
+Git 模型的 _专用术语_ 如下:
+
+- Workspace：工作区
+- Index / Stage：暂存区
+- Repository：仓库区（或本地仓库）
+- Remote：远程仓库
+
+#figure(image("image/bg2015120901.png", width: 90%), caption: "Git 模型")
+
+在使用 `git diff [path]` 命令时，默认是查看工作区(workspace)和暂存区(index)之间的差异。
+], title: "Git 模型")
+
+#tip-box[
+当需要比较当前本地分支和远程对应分支的差异时，一般按照如下流程来操作：
++ `git fetch <远程>` 获取远程分支的最新改动（移动 <远程>/HEAD 指针 ）
++ `git diff <本地分支> <远程>/<远程分支>` （在两个分支之间做比较）
+]
+
 == 演示2
 
 在 `main` 分支添加 `temp.txt`，此时 `temp.txt`是 `untracked` 状态。尝试执行 `git checkout new_branch`，提示:
@@ -493,3 +521,18 @@ b3efa5c (HEAD -> main) Merge branch 'feat/b'
 ➜  Git-Example git:(main) git log --oneline -1
 4cd8927 (HEAD -> main) Revert "bad commit"
 ```
+
+执行 `git log --oneline | tail -n 3`：
+
+```
+➜  Git-Example git:(main) git log --oneline | tail -n 3
+3e6cca8 git push/pull example
+fb7803e init: typ style
+2964a06 add license
+```
+
+执行 `git diff fb7803e 3e6cca8` 便可以查看第三次 commit 相对于第二次 commit 多做了什么改动。
+
+随便做一些改动，_不需要添加到暂存区_，执行 `git diff HEAD`:
+
+就可以看到当前做的一些新改动。
